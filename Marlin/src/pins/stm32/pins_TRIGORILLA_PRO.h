@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2020 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
@@ -22,53 +22,43 @@
 #pragma once
 
 /**
- * MKS Robin (STM32F130ZET6) board pin assignments
+ * TRIGORILLA PRO(STM32F130ZET6) board pin assignments
  *
- * https://github.com/makerbase-mks/MKS-Robin/tree/master/MKS%20Robin/Hardware
+ * https://github.com/
  */
 
 #ifndef __STM32F1__
   #error "Oops! Select an STM32F1 board in 'Tools > Board.'"
-#elif HOTENDS > 2 || E_STEPPERS > 2
-  #error "MKS Robin supports up to 2 hotends / E-steppers. Comment out this line to continue."
+#elif HOTENDS > 1 || E_STEPPERS > 2
+  #error "TRIGORILLA_PRO supports one hotend and two E-steppers. Comment out this line to continue."
 #endif
 
-#define BOARD_INFO_NAME "MKS Robin"
+#define BOARD_INFO_NAME "TRIGORILLA PRO"
 
 //
 // Release PB4 (Y_ENABLE_PIN) from JTAG NRST role
 //
 #define DISABLE_JTAG
 
-//#define SLOW_SOFT_I2C_MASTER_H
-//#define I2C_EEPROM   // AT24C64
-//#define E2END 0x7FFF // 64KB
-//#define FLASH_EEPROM_EMULATION
-//#define E2END 0xFFF // 4KB
-//#define E2END uint32(EEPROM_START_ADDRESS + (EEPROM_PAGE_SIZE * 2) - 1)
-//#define EEPROM_CHITCHAT
-#define DEBUG_EEPROM_READWRITE
-
 //
 // Servos
 //
-//#define SERVO0_PIN         PC3   // XS1 - 5
-//#define SERVO1_PIN         PA1   // XS1 - 6
-//#define SERVO2_PIN         PF9   // XS2 - 5
-//#define SERVO3_PIN         PF8   // XS2 - 6
-
+/*
+#define SERVO0_PIN         PC3   // XS1 - 5
+#define SERVO1_PIN         PA1   // XS1 - 6
+#define SERVO2_PIN         PF9   // XS2 - 5
+#define SERVO3_PIN         PF8   // XS2 - 6
+*/
 //
 // Limit Switches
+//
+#define X_MIN_PIN          -1
+#define X_MAX_PIN          PG10
+#define Y_MIN_PIN          -1
+#define Y_MAX_PIN          PA12
+#define Z_MIN_PIN          PA13
+#define Z_MAX_PIN          PA14
 
-//#define X_MIN_PIN          PG10 //ok
-//#define Y_MIN_PIN          PA12 //ok
-//#define Z_MAX_PIN          PA13 //ok
-//#define Z_MIN_PIN          PA14 //ok
-
-#define X_MAX_PIN          PG10 //ok
-#define Y_MAX_PIN          PA12 //ok
-#define Z_MAX_PIN          PA14 //ok
-#define Z_MIN_PIN          PA13 //ok
 
 //
 // Steppers
@@ -88,7 +78,7 @@
 #define E0_ENABLE_PIN      PB8
 #define E0_STEP_PIN        PB4
 #define E0_DIR_PIN         PB5
-
+// Z2 label
 #define E1_ENABLE_PIN      PG8
 #define E1_STEP_PIN        PC7
 #define E1_DIR_PIN         PC6
@@ -103,35 +93,29 @@
 // Heaters / Fans
 //
 #define HEATER_0_PIN       PG12   // HEATER1
+#define HEATER_1_PIN       -1
+#define HEATER_2_PIN       -1
 #define HEATER_BED_PIN     PG11   // HOT BED
-#define HEATER_BED_INVERTING true
-#define CONTROLLER_FAN_PIN PD6   // FAN ok
-#define E0_AUTO_FAN_PIN    PG14  // FAN ok
-#define FAN_PIN            PG13  // FAN ok
+
+
+#define FAN_PIN            PG13  // FAN 
+#define CONTROLLER_FAN_PIN PD6   // FAN 
+#define E0_AUTO_FAN_PIN    PG14  // FAN 
 
 #define POWER_LOSS_PIN     PA2   // PW_DET
-#define PS_ON_PIN          PA3   // PW_OFF
+#define PS_ON_PIN          -1
 #define FIL_RUNOUT_PIN     PA15  // MT_DET ok
 
-#define BEEPER_PIN         PB0  //ok
-#define LED_PIN            PD3  //ok
+#define BEEPER_PIN         PB0  
+#define LED_PIN            PD3  
 
 /**
- * Note: MKS Robin TFT screens use various TFT controllers
- * Supported screens are based on the ILI9341, ST7789V and ILI9328 (320x240)
- * ILI9488 is not supported
- * Define init sequences for other screens in u8g_dev_tft_320x240_upscale_from_128x64.cpp
- *
- * If the screen stays white, disable 'LCD_RESET_PIN'
- * to let the bootloader init the screen.
- *
- * Setting an 'LCD_RESET_PIN' may cause a flicker when entering the LCD menu
- * because Marlin uses the reset as a failsafe to revive a glitchy LCD.
+FSMC LCD
  */
-//#define LCD_RESET_PIN      PF11
+#define LCD_RESET_PIN      PA4
 #define LCD_BACKLIGHT_PIN  PD13
-#define FSMC_CS_PIN        PD7  // NE4
-#define FSMC_RS_PIN        PD11  // A0
+#define FSMC_CS_PIN        PD7   // NE1
+#define FSMC_RS_PIN        PD11  // A13
 
 #define LCD_USE_DMA_FSMC   // Use DMA transfers to send data to the TFT
 #define FSMC_DMA_DEV       DMA2
@@ -146,15 +130,15 @@
 
 // SPI1(PA7) & SPI3(PB5) not available
 #define ENABLE_SPI2
-
+/*
 #if ENABLED(SDIO_SUPPORT)
-  #define SCK_PIN           PB13 // SPI2 ok
-  #define MISO_PIN          PB14 // SPI2 ok
-  #define MOSI_PIN          PB15 // SPI2 ok
-  #define SS_PIN            PC11   // PB12 is X- ok
-  #define SD_DETECT_PIN     -1 // SD_CD ok
+  #define SCK_PIN           PB13 // SPI2
+  #define MISO_PIN          PB14 // SPI2
+  #define MOSI_PIN          PB15 // SPI2
+  #define SS_PIN            -1   // PB12 is X-
+  #define SD_DETECT_PIN     PF12 // SD_CD
 #else
-  // SD as custom software SPI (SDIO pins)
+  // SD as custom software SPI (SDIO pins)*/
   #define SCK_PIN           PC12
   #define MISO_PIN          PC8
   #define MOSI_PIN          PD2
@@ -162,4 +146,4 @@
   #define ONBOARD_SD_CS_PIN PC11
   #define SDSS              PD2
   #define SD_DETECT_PIN     -1
-#endif
+//#endif
